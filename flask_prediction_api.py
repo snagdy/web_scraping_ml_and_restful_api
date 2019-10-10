@@ -65,7 +65,7 @@ class HousePricePredictionAPI(Resource):
             prediction = query_object.get_prediction()
             app.logger.info('SUCCESS 200 - Valid request and prediction made.')
             response = {
-                        'cod': 200,
+                        'code': 200,
                         'Predicted House Price': prediction,
                         'Model Inputs': query_dict
             }
