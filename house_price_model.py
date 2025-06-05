@@ -109,31 +109,29 @@ class OpenStreetMapQuery(object):
         for lease_label in lease_type_list:
             dataset[lease_label] = 1 if lease_label == self.lease_type else 0
         cat_subcat_list = [
-            "amenity",
-            "building",
-            "highway",
-            "landuse",
-            "place",
-            "shop",
-            "cafe",
-            "city",
-            "convenience",
-            "cycleway",
-            "footway",
-            "house",
-            "houses",
-            "living_street",
-            "pedestrian",
-            "primary",
-            "residential",
-            "restaurant",
-            "secondary",
-            "service",
-            "suburb",
-            "tertiary",
-            "trunk",
-            "uncategoryified",
-            "yes",
+            'amenity',
+            'building',
+            'highway',
+            'landuse',
+            'place',
+            'cafe',
+            'fast_food',
+            'footway',
+            'house',
+            'living_street',
+            'neighbourhood',
+            'pedestrian',
+            'primary',
+            'residential',
+            'restaurant',
+            'secondary',
+            'service',
+            'studio',
+            'suburb',
+            'tertiary',
+            'trunk',
+            'uncategoryified',
+            'yes',
         ]
         for cat_or_subcat in cat_subcat_list:
             dataset[cat_or_subcat] = (
@@ -145,14 +143,29 @@ class OpenStreetMapQuery(object):
     def get_dataset(self):
         return self.dataset
 
+MODEL_EXPECTED_FEATURES_FOR_RFR = [
+    'importance', 'latitude', 'longitude', 'Non-Newbuild',
+    'Detached', 'Flat', 'Semi Detached', 'Terraced',
+    'Freehold', 'Leasehold',
+    'amenity', 'building', 'highway', 'landuse', 'place', 'cafe',
+    'fast_food', 'footway', 'house', 'living_street', 'neighbourhood',
+    'pedestrian', 'primary', 'residential', 'restaurant', 'secondary',
+    'service', 'studio', 'suburb', 'tertiary', 'trunk',
+    'uncategoryified', 'yes',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' # K-Means cluster labels
+]
 
 class HousePriceModel(object):
     def __init__(self, dataset):
         self.dataset = dataset
-        self.X = pd.DataFrame(dataset, index=[0])
+        # Create the initial DataFrame from the dataset.
+        # Then, REINDEX it IMMEDIATELY to match the expected order and add/drop columns.
+        self.X = pd.DataFrame(dataset, index=[0]).reindex(columns=MODEL_EXPECTED_FEATURES_FOR_RFR[:33],
+                                                          fill_value=0)  # [:33] because KMM dummies are added later
+
         self.kmm_X = pd.DataFrame([self.X.latitude, self.X.longitude]).T
-        self.kmm = load("k_means_clustering_model.joblib")
-        self.rfr = load("serialised_random_forest_regressor.joblib")
+        self.kmm = load("k_means_clustering_model_deploy.joblib")
+        self.rfr = load("serialised_random_forest_regressor_deploy.joblib")
 
     def predict_house_price(self):
         cluster_prediction = self.kmm.predict(self.kmm_X)

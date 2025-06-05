@@ -16,34 +16,34 @@ The model predicts house prices in London based on its parameters.
 
 ### How to Launch the Flask Application
 1. We are using a Conda environment for this application.
-Preferably Conda's provided base environment as it saves us
-from doing too much work in getting packages.
-This is highly recommended to do in a CMD shell if using Windows.
+
+```bash
+conda env create -f environment.yml
 ```
-cd <conda_directory>\Scripts\
-activate base                               # On Windows
-source activate base                        # On Linux
+
+
+2. Depending on your OS (Linux or Windows): 
+
+Linux
+```bash
+export FLASK_APP=flask_prediction_api.py       # Linux
 ```
-2. Next we actually get the packages we need.
+
+Windows
 ```
-conda install --name base joblib
-conda install --name base -c conda-forge flask-restful
+$env:FLASK_APP='.\flask_prediction_api.py'     # Windows (PowerShell)
+set FLASK_APP=flask_prediction_api.py          # Windows (cmd)
 ```
-3. Depending on your OS (Linux or Windows): 
-```
-export FLASK_APP=test_rest_api.py       # Linux
-$env:FLASK_APP='.\test_rest_api.py'     # Windows (PowerShell)
-set FLASK_APP=test_rest_api.py          # Windows (cmd)
-```
-4. Run the application using:
-```
+3. Run the application using:
+
+```bash
 flask run
 ```
  
 ---
 ### RESTful API Syntax
 The API syntax is as follows, arguments in any order separated by the ampersand (&):
-```
+```http request
 http://<host:port>/api?address=<address>&new_build=<new_build>&flat_type=<flat_type>&lease_type=<lease_type>
 ```
 Where the required arguments specified are as explained below:
@@ -59,7 +59,7 @@ Where the required arguments specified are as explained below:
 ---
 ### Expected RESTful API Output
 You can expect the output to be a dictionary as below:
-```
+```json
 {
   "Model Inputs": {
     "address": "50 St Katharine's Way, London E1W 1LA", 
@@ -72,6 +72,9 @@ You can expect the output to be a dictionary as below:
 }
 ```
 #### Trivia:
+
+NOTE: this is outdated! Last checked in 2019.
+
 The above response was produced by this query string:
 http://\<host:port\>/api?address=50%20St%20Katharine%27s%20Way,%20London%20E1W%201LA&new_build=false&flat_type=Flat&lease_type=Leasehold
 
