@@ -1,3 +1,19 @@
+# Web Scraping ML and RESTful API
+### Purpose
+
+This is a showcase of a pickled ML model hosted within a Flask RESTful application, 
+where the endpoint exposes inputs for inference from the trained model.
+
+The model predicts house prices in London based on its parameters.
+
+### NOTICE:
+
+- The below is all in need of an update, since this project was originally written in Python 2.x, in 2019!
+- Modernisation to Python 3.x and modern standards is a work in-progress.
+- Retraining the model (Random Forest Regressor, K-Means Clustering feature engineering, etc) on new web-scraped data is on the TODO list.
+
+---
+
 ### How to Launch the Flask Application
 1. We are using a Conda environment for this application.
 Preferably Conda's provided base environment as it saves us
